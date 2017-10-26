@@ -7,7 +7,7 @@
  '(nxml-slash-auto-complete-flag t)
  '(rng-schema-locating-files
    (quote
-    ("schemas.xml")))) ;; @@ add more here (OS-specific)
+    ("schemas.xml" "/Users/dpk/.emacs.d/schemas.xml" "/usr/local/Cellar/emacs/24.3/share/emacs/24.3/etc/schema/schemas.xml"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -23,6 +23,8 @@
 (setq mouse-sel-mode t)
 (setq mouse-wheel-mode t)
 (setq backup-directory-alist `(("." . "~/.saves")))
+
+(add-to-list 'load-path "~/.emacs.d/lisp/")
 
 ;; copy and paste using the OS X clipboard regardless of where i'm running emacs
 (defun copy-from-osx ()
@@ -138,5 +140,16 @@
 (remove-hook 'text-mode-hook 'turn-on-auto-fill)
 (add-hook 'nxml-mode-hook 'turn-off-auto-fill)
 
+;; utility functions
+(defun title-case (b e)
+  (interactive "r")
+  (shell-command-on-region b e "titlecase" (current-buffer) t))
+
+;; add smart-quotes mode
+(require 'smart-quotes)
+(setq smart-quotes-reverse-quotes nil)
+(setq smart-quotes-left-context "^\\|[^[:word:]“‘]") ; fixes for my idiosyncratic typing style, and also for all unicode non-word chars
+
 ;; start the server
 (server-start)
+
