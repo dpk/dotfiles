@@ -1,0 +1,4 @@
+#!/bin/sh
+# find a file by content from basically anywhere in your git history
+# for when you think you lost something but hopefully not
+(git stash list; git reflog) | awk '{print $1}' | xargs git grep "${@}"

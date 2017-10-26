@@ -1,0 +1,2 @@
+#!/bin/bash
+exec java  -jar /Users/dpk/Downloads/SaxonPE9-8-0-5J/saxon9pe.jar "$@"

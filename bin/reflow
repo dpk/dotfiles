@@ -1,0 +1,63 @@
+#!/usr/bin/env perl -w
+
+use strict;
+use Getopt::Long;
+use Text::Reflow qw(reflow_file);
+
+my $help;
+my $maximum = 75;
+my $optimum = 65;
+my $indent = '';
+my $indent1 = '';
+my $indent2 = '';
+my $quote = '';
+my $skipto = '';
+my $skipindented = 2;
+my $frenchspacing;
+my $oneparagraph;
+my $semantic = 30;
+my $namebreak = 10;
+my $sentence = 20;
+my $independent = 10;
+my $dependent = 6;
+my $shortlast = 5;
+my $connpenalty = 1;
+
+my $result = GetOptions(
+                         'help|h'      => \$help,
+                         'maximum|m=i' => \$maximum,
+                         'optimum|o=i' => \$optimum,
+                         'indent|i=s'  => \$indent,
+                         'indent1'     => \$indent1,
+                         'indent2'     => \$indent2,
+                         'quote|q=s'   => \$quote,
+                         'skipto|s=s'  => \$skipto,
+                         'skipindented=i' => \$skipindented,
+                         'frenchspacing|f' => \$frenchspacing,
+                         'oneparagraph|1' => \$oneparagraph,
+                         'semantic=i'  => \$semantic,
+                         'namebreak=i' => \$namebreak,
+                         'sentence=i'  => \$sentence,
+                         'independent=i' => \$independent,
+                         'dependent=i' => \$dependent,
+                         'shortlast=i' => \$shortlast,
+                         'connpenalty=i' => \$connpenalty
+                       );
+
+if ($help) {
+  print <<EOF;
+Usage: reflow [options]
+
+Word wraps text input using the Knuth line-break algorithm.
+
+Options:
+
+       --maximum|-m   Set the maximum line length
+       --optimum|-o   Set the optimum line length
+        --indent|-i  
+EOF
+  exit;
+}
+
+reflow_file("", "");
+

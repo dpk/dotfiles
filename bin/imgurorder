@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+
+from lxml.html import html5parser as html
+import requests
+import os, os.path
+import sys
+
+class ImgurAlbumError(Exception): pass
+
+def imgur_album_get(url):
+    resp = requests.get(url)
+    if resp.status_code != 200: raise ImgurAlbumError("got %03d status code requesting %s" % (resp.status_code, url))
+    return resp.text
+
+def get_image_order(src):
+    h = html.document_fromstring(src)
+    imgs = h.xpath('//html:div[@class="image"]', namespaces={'html':'http://www.w3.org/1999/xhtml'})
+    if len(imgs) == 0:
+        raise ImgurAlbumError("couldn't find any image id elements on the page")
+    return [img.attrib['id'] for img in imgs]
+
+def order(url, dir='.'):
+    src = imgur_album_get(url)
+    ids = get_image_order(src)
+    for i, id in enumerate(ids, start=1):
+        have_renamed = False
+        for format in ('jpg', 'gif', 'png'):
+            old_filename = '%s/%s.%s' % (dir, id, format)
+            new_filename = '%s/%03d-%s.%s' % (dir, i, id, format)
+            if os.path.isfile('%s/%s.%s' % (dir, id, format)):
+                os.rename(old_filename, new_filename)
+                have_renamed = True
+        if not have_renamed:
+            print("warning: didn't find a file for image with id %s" % id, file=sys.stderr)
+
+if __name__ == '__main__':
+    if not 1 < len(sys.argv) <= 3:
+        print("imgurorder: renames files from a downloaded imgur album so as to sort correctly lexicographically", file=sys.stderr)
+        print("usage: imgurorder url [dir]", file=sys.stderr)
+        os._exit(1)
+    url = sys.argv[1]
+    dir = sys.argv[2] if len(sys.argv) > 2 else '.'
+    try:
+        order(url, dir)
+    except Exception as err:
+        print("error: %s" % err, file=sys.stderr)

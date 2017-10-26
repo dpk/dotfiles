@@ -1,0 +1,4 @@
+#!/bin/sh
+notefile=~/Notes/"$(date -u +"%Y-%m-%dT%H-%M-%SZ")".txt
+touch "$notefile"
+/usr/local/bin/bbedit "$notefile"

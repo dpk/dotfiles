@@ -1,0 +1,2 @@
+#!/bin/sh
+tr -Cd '][.,<>+-'|sed 's/\./putchar(*p);/g;s/,/*p=getchar();/g;s/[+-]/&&*p;/g;s/[<>]/&&p;/g;s/\[/while(*p){/g;y/]<>/}-+/;s/^/main(){int a[30000];int *p=a;/;s/$/}/'|cc -xc -

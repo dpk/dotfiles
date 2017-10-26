@@ -1,0 +1,2 @@
+#!/bin/sh
+exec lighttpd -Df /dev/stdin <<< 'server.modules += ("mod_accesslog") server.document-root = "'`realpath .`'" server.port = 8888 dir-listing.activate = "enable" mimetype.assign = (".html" => "text/html", ".css" => "text/css") accesslog.filename = "/dev/stdout"'

@@ -1,0 +1,3 @@
+#!/bin/sh
+activate_script="$1""/bin/activate"
+exec bash -c 'source '"$activate_script"' && echo "activated virtualenv" && exec fish'
