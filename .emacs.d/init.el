@@ -83,6 +83,13 @@
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
+;; ido-mode
+(ido-mode t)
+
+;; tabbar-mode is kill
+
+(tabbar-mode 0)
+
 ;; allow selection by clicking in the left margin
 ;; from http://stackoverflow.com/questions/8103111/can-i-select-text-by-clicking-on-the-linum-column-in-emacs
 
@@ -149,6 +156,10 @@
 (require 'smart-quotes)
 (setq smart-quotes-reverse-quotes nil)
 (setq smart-quotes-left-context "^\\|[^[:word:]“‘]") ; fixes for my idiosyncratic typing style, and also for all unicode non-word chars
+
+;; set Cmd-Opt-brackets to cycle buffers
+(global-set-key (kbd "A-“") 'previous-buffer)
+(global-set-key (kbd "A-‘") 'next-buffer)
 
 ;; start the server
 (server-start)
