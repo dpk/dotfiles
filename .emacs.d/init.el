@@ -1,21 +1,8 @@
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(mouse-wheel-mode t)
- '(nxml-slash-auto-complete-flag t)
- '(rng-schema-locating-files
-   (quote
-    ("schemas.xml" "/Users/dpk/.emacs.d/schemas.xml" "/usr/local/Cellar/emacs/24.3/share/emacs/24.3/etc/schema/schemas.xml"))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(add-to-list 'load-path "~/.emacs.d/lisp/")
 
-(message "Hello-world -- this is my init.el file loading!")
+;; disable aquamacs pester mode/customizations.el
+(setq aquamacs-save-options-on-quit nil)
+
 ;; enable mouse terminal support
 (require 'mouse)
 (xterm-mouse-mode t)
@@ -23,8 +10,6 @@
 (setq mouse-sel-mode t)
 (setq mouse-wheel-mode t)
 (setq backup-directory-alist `(("." . "~/.saves")))
-
-(add-to-list 'load-path "~/.emacs.d/lisp/")
 
 ;; copy and paste using the OS X clipboard regardless of where i'm running emacs
 (defun copy-from-osx ()
@@ -87,7 +72,6 @@
 (ido-mode t)
 
 ;; tabbar-mode is kill
-
 (tabbar-mode 0)
 
 ;; allow selection by clicking in the left margin
@@ -142,6 +126,12 @@
 ;; configure whitespace-mode to automatically start with makefile-mode
 (add-hook 'makefile-mode-hook 'whitespace-mode)
 
+;; nxml-mode customizations
+(nxml-mode)
+(setq nxml-slash-auto-complete-flag t)
+(add-to-list 'rng-schema-locating-files "schemas.xml")
+(add-to-list 'rng-schema-locating-files "~/.emacs.d/schemas.xml")
+
 ;; auto-fill-mode is kill
 (turn-off-auto-fill)
 (remove-hook 'text-mode-hook 'turn-on-auto-fill)
@@ -159,6 +149,7 @@
 (setq smart-quotes-left-context "^\\|[^[:word:]“‘]") ; fixes for my idiosyncratic typing style, and also for all unicode non-word chars
 
 ;; de-irritate markdown-mode
+(markdown-mode)
 (define-key markdown-mode-map (kbd "<M-right>") nil)
 (define-key markdown-mode-map (kbd "<M-left>") nil)
 
@@ -171,6 +162,7 @@
   "Select the current line, including the newline character at the end"
   (interactive)
   (next-line)
+  (beginning-of-line)
   (let ((lbgp (line-beginning-position)))
     (previous-line)
     (set-mark lbgp)))
@@ -179,4 +171,7 @@
 
 ;; start the server
 (server-start)
+
+(if (file-exists-p "~/.emacs.d/init.private.el")
+    (load  "~/.emacs.d/init.private.el"))
 
