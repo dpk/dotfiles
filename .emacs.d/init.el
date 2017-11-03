@@ -158,9 +158,24 @@
 (setq smart-quotes-reverse-quotes nil)
 (setq smart-quotes-left-context "^\\|[^[:word:]“‘]") ; fixes for my idiosyncratic typing style, and also for all unicode non-word chars
 
+;; de-irritate markdown-mode
+(define-key markdown-mode-map (kbd "<M-right>") nil)
+(define-key markdown-mode-map (kbd "<M-left>") nil)
+
 ;; set Cmd-Opt-brackets to cycle buffers
 (global-set-key (kbd "A-“") 'previous-buffer)
 (global-set-key (kbd "A-‘") 'next-buffer)
+
+;; select line
+(defun select-current-line ()
+  "Select the current line, including the newline character at the end"
+  (interactive)
+  (next-line)
+  (let ((lbgp (line-beginning-position)))
+    (previous-line)
+    (set-mark lbgp)))
+(define-key osx-key-mode-map (kbd "A-l") 'select-current-line)
+(define-key osx-key-mode-map (kbd "A-j") 'goto-line)
 
 ;; start the server
 (server-start)
