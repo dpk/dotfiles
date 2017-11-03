@@ -146,6 +146,7 @@
 (turn-off-auto-fill)
 (remove-hook 'text-mode-hook 'turn-on-auto-fill)
 (add-hook 'nxml-mode-hook 'turn-off-auto-fill)
+(add-hook 'markdown-mode-hook 'turn-off-auto-fill)
 
 ;; utility functions
 (defun title-case (b e)
