@@ -2,6 +2,8 @@
 
 ;; disable aquamacs pester mode/customizations.el
 (setq aquamacs-save-options-on-quit nil)
+(setq custom-file "~/.emacs.d/custom.el")
+(load-file "~/.emacs.d/custom.el")
 
 ;; enable mouse terminal support
 (require 'mouse)
@@ -57,6 +59,43 @@
   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
 (package-initialize) ;; You might already have this line
 
+;; fix stupid Aquamacs defaults which break custom theme
+(assq-delete-all 'foreground-color default-frame-alist)
+(assq-delete-all 'background-color default-frame-alist)
+(assq-delete-all 'cursor-color default-frame-alist)
+
+;; configure theme
+(require 'vimspectr)
+(add-to-list 'custom-theme-load-path  "~/.emacs.d/vimspectr-themes")
+(setq custom-theme-directory "~/.emacs.d/themes")
+
+(load-theme 'vimspectr210wcurve-light t)
+(load-theme 'vimspectr210wcurve-dark t)
+(load-theme 'smart-mode-line-light-powerline t)
+(load-theme 'smart-mode-line-powerline t)
+
+(defun turn-on-daytime-theme ()
+  (interactive)
+  (disable-theme 'smart-mode-line-powerline)
+  (enable-theme 'smart-mode-line-light-powerline)
+  (disable-theme 'vimspectr210wcurve-dark)
+  (enable-theme 'vimspectr210wcurve-light))
+(turn-on-daytime-theme)
+
+(defun turn-on-nighttime-theme ()
+  (interactive)
+  (disable-theme 'smart-mode-line-light-powerline)
+  (enable-theme 'smart-mode-line-powerline)
+  (disable-theme 'vimspectr210wcurve-light)
+  (enable-theme 'vimspectr210wcurve-dark))
+
+(defun toggle-day-night ()
+  (interactive)
+  (if (memq 'vimspectr210wcurve-dark custom-enabled-themes)
+      (turn-on-daytime-theme)
+    (turn-on-nighttime-theme)))
+(global-set-key (kbd "C-*") 'toggle-day-night)
+
 ;; smart mode line
 (setq sml/theme 'light-powerline)
 (sml/setup)
@@ -73,6 +112,10 @@
 
 ;; tabbar-mode is kill
 (tabbar-mode 0)
+(define-key osx-key-mode-map (kbd "A-t") nil)
+
+;; global-linum-mode
+(global-linum-mode 1)
 
 ;; allow selection by clicking in the left margin
 ;; from http://stackoverflow.com/questions/8103111/can-i-select-text-by-clicking-on-the-linum-column-in-emacs
@@ -132,6 +175,10 @@
 (add-to-list 'rng-schema-locating-files "schemas.xml")
 (add-to-list 'rng-schema-locating-files "~/.emacs.d/schemas.xml")
 
+;; enable rgb(...) colours rendering in less-css-mode
+(rainbow-mode)
+(add-to-list 'rainbow-html-colors-major-mode-list 'less-css-mode)
+
 ;; auto-fill-mode is kill
 (turn-off-auto-fill)
 (remove-hook 'text-mode-hook 'turn-on-auto-fill)
@@ -146,7 +193,7 @@
 ;; add smart-quotes mode
 (require 'smart-quotes)
 (setq smart-quotes-reverse-quotes nil)
-(setq smart-quotes-left-context "^\\|[^[:word:]“‘]") ; fixes for my idiosyncratic typing style, and also for all unicode non-word chars
+(setq smart-quotes-left-context "^\\|[^[:word:]“‘.,;]") ; fixes for my idiosyncratic typing style, and also for all unicode non-word chars
 
 ;; de-irritate markdown-mode
 (markdown-mode)
@@ -156,6 +203,17 @@
 ;; set Cmd-Opt-brackets to cycle buffers
 (global-set-key (kbd "A-“") 'previous-buffer)
 (global-set-key (kbd "A-‘") 'next-buffer)
+;; and Cmd-Shift too (@@ decide on just one of these, this is borken)
+(define-key osx-key-mode-map (kbd "A-{") 'previous-buffer)
+(define-key osx-key-mode-map (kbd "A-}") 'next-buffer)
+
+;; set Cmd-W to kill buffer and Cmd-Opt-W to close window
+(defun kill-current-buffer ()
+  "Kill the current buffer"
+  (interactive)
+  (kill-buffer (current-buffer)))
+(define-key osx-key-mode-map (kbd "A-w") 'kill-current-buffer)
+(define-key osx-key-mode-map (kbd "A-∑") 'close-window)
 
 ;; select line
 (defun select-current-line ()
@@ -173,5 +231,4 @@
 (server-start)
 
 (if (file-exists-p "~/.emacs.d/init.private.el")
-    (load  "~/.emacs.d/init.private.el"))
-
+    (load-file "~/.emacs.d/init.private.el"))
