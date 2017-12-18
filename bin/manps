@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+fname="$TMPDIR"'/man '"$@"'.ps'
+man -t "${@}" > "$fname"
+exec open -- "$fname"
+
