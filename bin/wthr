@@ -1,0 +1,3 @@
+#!/bin/sh
+# depends on darksky-weather and locateme
+weather -l "$(locateme | awk '{print $1}' | tr -d '<>+')" "${@}"
